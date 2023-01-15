@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const ejs = require('ejs');
 const _ = require('lodash');
+const dotenv = require('dotenv');
 const Date = require(__dirname+'/local_modules/date-parser.js');
 const mongoose = require('mongoose');
 
@@ -18,7 +19,16 @@ const listSchema = {
     items: [itemSchema]
 }
 
-mongoose.connect("mongodb+srv://menma:Menma%40atlas@menma.jdavibi.mongodb.net/toDoList?retryWrites=true&w=majority");
+dotenv.config();
+const atlas = {
+    cluster: process.env.CLUSTER,
+    userName: process.env.USER,
+    password: process.env.PASSWORD,
+    dataBase: process.env.DATABASE
+}
+
+const URI = `mongodb+srv://${atlas.userName}:${atlas.password}@${atlas.cluster}.jdavibi.mongodb.net/${atlas.dataBase}?retryWrites=true&w=majority`;
+mongoose.connect(URI);
 const List = mongoose.model('list', listSchema);
 const Item = mongoose.model('item', itemSchema);
 
